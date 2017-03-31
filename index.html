@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Calcu">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon.ico">
+
+    <title>E-Step Math Wizardry</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>E-Steps calculator</h1>
+        <p class="lead">Math is tricky let computers do it for you.</p>
+      </div>
+      <div class="alert alert-success" id="success" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Success!</strong> <span id="success-message"></span>
+      </div>
+      <div class="alert alert-danger" id="errors" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>You shall not pass!</strong> <span id="error-message"></span>
+      </div>
+      
+      <div class="button-group">
+        <input type="text" class="form-control" id="current-esteps" placeholder="Current E-steps">
+        <input type="text" class="form-control" id="measured-difference" placeholder="Measured difference after 100m of extruded filament">
+        <span class="input-group-btn">
+          <button type="button" id="calculate" class="btn btn-default">Calculate New Esteps</button>
+        </span>
+      </div>
+              
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script>
+    $('#calculate').click(function(){
+      CalculateEsteps()
+    })
+
+    $(document).keypress(function(event){
+      console.log(event.which)
+      if(event.which == 13){
+        CalculateEsteps()
+      }
+    })
+
+
+    var CalculateEsteps = function() {
+      var difference = $('#measured-difference').val()
+      difference = parseFloat(difference)
+      var old_esteps = $('#current-esteps').val()
+      old_esteps = parseFloat(old_esteps)
+
+      if(ValidateInput(old_esteps, difference)){
+        $('#errors').hide()
+        console.log("Valid input.  \nCalculating....")
+        console.log(100/(120-difference))
+        var new_esteps = ((100/(120-difference))*old_esteps).toFixed(1)
+        $("#success-message").text("You new Estep settings are: " + new_esteps)
+        $("#success").fadeIn('slow', function(){})
+        console.log(new_esteps)
+      } else {
+        $('#success').hide()
+        $('#errors').fadeIn('slow', function(){})
+      }
+    }
+
+    var ValidateInput = function(esteps, difference) {
+      var valid = true
+      if(isNaN(difference) != false){
+        $('#error-message').text("Measured difference must be a number. ")
+        valid = false
+      }
+
+      if(isNaN(esteps) != false){
+        $('#error-message').append("Esteps must be a number")
+        valid = false
+      }
+
+      return valid
+    }
+    </script>
+  </body>
+</html>
